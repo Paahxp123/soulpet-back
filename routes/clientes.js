@@ -46,6 +46,18 @@ router.post("/clientes", async (req, res) => {
   }
 });
 
+//Rota endereço do cliente
+router.get("/clientes/:clienteId/endereco", async (req, res) => {
+  const endereco = await Endereco.findOne({
+    where: {clienteId: req.params.clienteId}
+  });
+  if (endereco) {
+    res.json(endereco);
+  } else {
+    res.status(404).json({ message: "Endereço do cliente não encontrado." });
+  }
+});
+
 // atualizar um cliente
 router.put("/clientes/:id", async (req, res) => {
   // obter dados do corpo da requisão
