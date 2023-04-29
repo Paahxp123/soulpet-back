@@ -25,7 +25,10 @@ const Produto = connection.define("produto", {
     },
     categoria: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            isIn: [["higiene","Higiene", "limpeza", "Limpeza","brinquedos","Brinquedos", "marcas","Marcas","cachorro","Cachorro", "gato", "Gato"]]
+        }
     }
 });
 
