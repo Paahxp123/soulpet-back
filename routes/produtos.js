@@ -45,16 +45,16 @@ router.delete("/produtos/:id", async (req, res) => {
 router.post("/produtos", async (req, res) => {
     const { nome, preco, descricao, desconto, dataDesconto, categoria } = req.body;
     const dataAtual = new Date();
-    const categorias = ["higiene","Higiene", "limpeza", "Limpeza","brinquedos","Brinquedos", "marcas","Marcas","cachorro","Cachorro", "gato", "Gato"];
+    const categorias = ["higiene", "Higiene", "limpeza", "Limpeza", "brinquedos", "Brinquedos", "marcas", "Marcas", "cachorro", "Cachorro", "gato", "Gato"];
     try {
-        if (!categorias.includes(categoria)){
-            return res.status(400).json({message: "Categoria inválida"});
+        if (!categorias.includes(categoria)) {
+            return res.status(400).json({ message: "Categoria inválida" });
         }
-        if (desconto <0 || desconto >100){
-            return res.status(400).json({message: "Desconto inválido"});
+        if (desconto < 0 || desconto > 100) {
+            return res.status(400).json({ message: "Desconto inválido" });
         }
-        if (new Date(dataDesconto)< dataAtual){
-        return res.status(400).json({message: "Data de desconto inválida!"})
+        if (new Date(dataDesconto) < dataAtual) {
+            return res.status(400).json({ message: "Data de desconto inválida!" })
         }
         const novo = await Produto.create({ nome, preco, descricao, desconto, dataDesconto, categoria });
         res.status(201).json(novo);
@@ -66,22 +66,36 @@ router.post("/produtos", async (req, res) => {
 
 //LISTAR PRODUTOS
 router.get("/produtos", async (req, res) => {
-    const {nome, categoria} = req.query;
+    const { nome, categoria } = req.query;
+    let produtos = []
     try {
-        //se tiver nome e categoria preciso pesquisar por nome e categoria
-        //const produtos = await Produto.find(where:{nome:nome,categoria:categoria});
-        //senão se, se tiver nome mostrar pesquisa com nome 
-        //senão se, se tiver categoria mostrar pesquisa com categoria
-        //senão se, se não tiver nem nome nem categoria mostrar todos 
-        //const produtos = await Produto.find(where:{nome:nome,categoria:categoria});
-      // return
+        if (nome && categoria) {
+            produtos = await Produto.findAll({ where: { nome: nome, categoria: categoria } });
+        } else if (nome) {
+            produtos = await Produto.findAll({ where: { nome: nome } });
+        } else if (categoria) {
+            produtos = await Produto.findAll({ where: { categoria: categoria } });
+        } else {
+            produtos = await Produto.findAll();
+        }
         res.status(200).json(produtos);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ mensagem: "Ocorreu um erro ao buscar os produtos." });
+        res.status(500).json({ message: "Ocorreu um erro ao buscar os produtos." });
     }
 });
+router.get("/produtos/:id", async (req, res) => {
+    // SELECT * FROM produtos WHERE id = 1;
+    const produto = await Produto.findOne({
+        where: { id: req.params.id },
+    });
 
+    if (produto) {
+        res.json(produto);
+    } else {
+        res.status(404).json({ message: "Produto não encontrado." });
+    }
+});
 module.exports = router;
 
 
