@@ -93,7 +93,42 @@ router.get("/produtos/:id", async (req, res) => {
         res.status(404).json({ message: "Produto não encontrado." });
     }
 });
-module.exports = router;
+//ATUALIZAR PRODUTOS 
+router.put('/produtos/:id', async (req, res)=> {
+    const { id } = req.params;
+    const { nome, preco, descricao, desconto, dataDesconto, categoria } = req.body;
 
+    //Produto existe?
+    const produto = await Produto.findOne({ where: { id } });
+    if (!produto) {
+        return res.status(404).json({ message: 'Produto não encontrado' });
+    }
+
+    //Produto se encontra dentro das categorias é uma das predefinidas no produtos js?
+    const categoriasValidas = ['higiene', 'Higiene', 'limpeza', 'Limpeza', 'brinquedos', 'Brinquedos', 'marcas', 'Marcas', 'cachorro', 'Cachorro', 'gato', 'Gato'];
+    if (!categoriasValidas.includes(categoria)) {
+        return res.status(400).json({ message: 'Categoria inválida' });
+    }
+
+    //Data do produto é futura?
+    if (dataDesconto && new Date(dataDesconto) <= new Date()) {
+        return res.status(400).json({ message: 'Data de desconto inválida' });
+    }
+
+    //A data de desconto está entre 0 e 100?
+    if (desconto && (desconto < 0 || desconto > 100)) {
+        return res.status(400).json({ message: 'Desconto inválido' });
+    }
+
+    //Atualizar o produto com os dados recebidos do body
+    try {
+        await produto.update({ nome, preco, descricao, desconto, dataDesconto, categoria });
+        return res.status(200).json({ message: 'Produto atualizado com sucesso' });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Erro ao atualizar o produto' });
+    }
+});
+module.exports = router;
 
 
