@@ -17,11 +17,11 @@ const Produto = connection.define("produto", {
     },
     desconto: {
         type: DataTypes.FLOAT,
-        allowNull: false
+        allowNull: true
     },
     dataDesconto: {
         type: DataTypes.DATEONLY,
-        allowNull: false
+        allowNull: true
     },
     categoria: {
         type: DataTypes.STRING,
