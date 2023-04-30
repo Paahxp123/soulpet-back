@@ -1,7 +1,3 @@
-
-
-
-const { where } = require("sequelize");
 const Produto = require("../database/produto");
 
 //Criação do grupo de rotas
@@ -41,6 +37,7 @@ router.delete("/produtos/:id", async (req, res) => {
     }
 
 });
+
 //INSERIR PRODUTOS
 router.post("/produtos", async (req, res) => {
     const { nome, preco, descricao, desconto, dataDesconto, categoria } = req.body;
@@ -60,7 +57,7 @@ router.post("/produtos", async (req, res) => {
         res.status(201).json(novo);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ mensagem: "Ocorreu um erro ao criar um novo produto." });
+        res.status(500).json({ message: "Ocorreu um erro ao criar um novo produto." });
     }
 });
 
