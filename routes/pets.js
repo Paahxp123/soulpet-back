@@ -41,7 +41,7 @@ router.post("/pets", async (req, res) => {
 
 router.put("/pets/:id", async (req, res) => {
   // Esses são os dados que virão no corpo JSON
-  const { nome, tipo, dataNasc, porte } = req.body;
+  const { nome, tipo, porte, dataNasc, clienteId } = req.body;
 
   // É necessário checar a existência do Pet
   // SELECT * FROM pets WHERE id = "req.params.id";
@@ -53,7 +53,7 @@ router.put("/pets/:id", async (req, res) => {
       // IMPORTANTE: Indicar qual o pet a ser atualizado
       // 1º Arg: Dados novos, 2º Arg: Where
       await Pet.update(
-        { nome, tipo, dataNasc, porte },
+        { nome, tipo, porte, dataNasc, clienteId },
         { where: { id: req.params.id } } // WHERE id = "req.params.id"
       );
       // await pet.update({ nome, tipo, dataNasc, porte });
