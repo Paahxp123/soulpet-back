@@ -31,10 +31,15 @@ app.use(rotasServicos);
 app.use(rotasPedidos);
 
 
-// Escuta de eventos (listen)
-app.listen(3001, () => {
-  // Gerar as tabelas a partir do model
-  // Force = apaga tudo e recria as tabelas
-  connection.sync();
-  console.log("Servidor rodando em http://localhost:3001/");
+app.listen(3001, async () => {
+  try {
+    // Gerar as tabelas a partir do model
+    // Force = apaga tudo e recria as tabelas
+    await connection.sync();
+    console.log("Tabelas criadas com sucesso!");
+
+    console.log("Servidor rodando em http://localhost:3001/");
+  } catch (error) {
+    console.error("Erro ao criar as tabelas:", error);
+  }
 });
