@@ -14,7 +14,10 @@ const Agendamento = connection.define("agendamento", {
 });
 
 const Servico = require("./servico");
+const Pet = require("./pet");
 
+Pet.hasMany(Agendamento);
+Agendamento.belongsTo(Pet, { foreignKey: { allowNull: true } });
 
 Servico.hasMany(Agendamento);
 Agendamento.belongsTo(Servico);
