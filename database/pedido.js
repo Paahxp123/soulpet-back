@@ -18,7 +18,7 @@ const Pedidos = connection.define("pedidos", {
 
 // Associação Cliente-Pedido: 1:N
     Cliente.hasMany(Pedidos, {
-        foreignKey: 'pedidoId',
+        foreignKey: 'clienteId', // A foreign key deve ser em relação à tabela pai, que no caso é a tabela Cliente
         onDelete: 'CASCADE'
     });
     Pedidos.belongsTo(Cliente);
@@ -26,7 +26,7 @@ const Pedidos = connection.define("pedidos", {
 // Associação Produto-Pedido: 1:N
 
     Produto.hasMany(Pedidos, {
-        foreignKey: 'pedidoId',
+        foreignKey: 'produtoId', // Aqui devemos voltar a foreign key para produtoId, para evitar o mesmo erro que aconteceu com a tabela de clientes
         onDelete: 'CASCADE'
     });
     Pedidos.belongsTo(Produto);
