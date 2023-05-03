@@ -5,6 +5,9 @@ const { Router } = require("express");
 const Pedidos = require("../database/pedido");
 const Produto = require("../database/produto");
 
+//Importações do schema de validação
+const {pedidoSchema} = require("../database/validations");
+
 // Criar o grupo de rotas (/clientes)
 const router = Router();
 
@@ -90,12 +93,12 @@ router.get("/pedidos/clientes/:id", async (req, res) => {
 
 // Adicionar um pedido
 
-router.post("/pedidos", async (req, res) => {
-    const { pedidoId, quantidade, clienteId, produtoId } = req.body;
+router.post("/pedidos", pedidoSchema, async (req, res) => {
+    const {quantidade, clienteId, produtoId } = req.body;
     try {
         const novoPedido = await Pedidos.create(
-            { pedidoId, quantidade, clienteId, produtoId },
-            { includes: [Cliente, Produto] }
+            { quantidade, clienteId, produtoId },
+            // { includes: [Cliente, Produto] }
         );
         res.status(201).json(novoPedido);
     } catch (err) {
@@ -106,7 +109,7 @@ router.post("/pedidos", async (req, res) => {
 
 // Atualizar os dados de um pedido
 
-router.put("/pedidos/:id", async (req, res) => {
+router.put("/pedidos/:id", pedidoSchema, async (req, res) => {
     const { pedidoId, quantidade } = req.body;
     const pedido = await Pedidos.findByPk(req.params.id);
 

@@ -1,9 +1,11 @@
 const Cliente = require("../database/cliente");
 const Pet = require("../database/pet");
-
 const { Router } = require("express");
 
-// Criar o grupo de rotas (/pets)
+//Importações do schema de validação
+const {petSchema} = require("../database/validations");
+
+
 const router = Router();
 
 router.get("/pets", async (req, res) => {
@@ -22,7 +24,7 @@ router.get("/pets/:id", async (req, res) => {
   }
 });
 
-router.post("/pets", async (req, res) => {
+router.post("/pets", petSchema, async (req, res) => {
   const { nome, tipo, porte, dataNasc, clienteId } = req.body;
 
   try {
@@ -39,7 +41,7 @@ router.post("/pets", async (req, res) => {
   }
 });
 
-router.put("/pets/:id", async (req, res) => {
+router.put("/pets/:id", petSchema, async (req, res) => {
   // Esses são os dados que virão no corpo JSON
   const { nome, tipo, porte, dataNasc, clienteId } = req.body;
 

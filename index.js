@@ -4,6 +4,9 @@ require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 
+// importações do schema de validação
+const { errors } = require('celebrate');
+
 // Configuração do App
 const app = express();
 app.use(express.json()); // Possibilitar transitar dados usando JSON
@@ -11,6 +14,7 @@ app.use(morgan("dev"));
 
 // Configurações de acesso
 app.use(cors({ origin: "http://localhost:3000" }));
+
 
 // Configuração do Banco de Dados
 const { connection, authenticate } = require("./database/database");
@@ -33,6 +37,10 @@ app.use(rotasServicos);
 app.use(rotasPedidos);
 app.use(rotasAgendamentos);
 app.use(rotasDashboard);
+
+
+// Adicione o middleware de tratamento de erros do Celebrate
+app.use(errors());
 
 
 app.listen(3001, async () => {

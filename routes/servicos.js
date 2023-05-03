@@ -1,10 +1,11 @@
 const { Router } = require("express");
 const Servico = require("../database/servico");
+const { servicoSchema } = require('../database/validations');
 
 // Criar o grupo de rotas (/Serviços)
 const router = Router();
 
-router.post("/servicos", async (req, res) => {
+router.post("/servicos", servicoSchema, async (req, res) => {
   const { nome, preco } = req.body;
 
   try {
@@ -66,7 +67,7 @@ router.delete("/servicos-all", async (req, res) => {
   }
 });
 //ATUALIZAR SERVIÇOS
-router.put("/servicos/:id", async (req, res) => {
+router.put("/servicos/:id", servicoSchema, async (req, res) => {
   const { nome, preco } = req.body;
   const { id } = req.params;
   try {
