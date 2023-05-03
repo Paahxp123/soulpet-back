@@ -1,8 +1,10 @@
 const Cliente = require("../database/cliente");
 const Endereco = require("../database/endereco");
 const Pet = require("../database/pet");
-
 const { Router } = require("express");
+
+//Importações do schema de validação
+const { clienteSchema } = require('../database/validations');
 
 // Criar o grupo de rotas (/clientes)
 const router = Router();
@@ -29,7 +31,7 @@ router.get("/clientes/:id", async (req, res) => {
   }
 });
 
-router.post("/clientes", async (req, res) => {
+router.post("/clientes", clienteSchema, async (req, res) => {
   // Coletar os dados do req.body
   const { nome, email, telefone, endereco } = req.body;
 
@@ -79,7 +81,7 @@ router.get("/clientes/pets/:clienteId", async (req, res) => {
 });
 
 // atualizar um cliente
-router.put("/clientes/:id", async (req, res) => {
+router.put("/clientes/:id", clienteSchema, async (req, res) => {
   // obter dados do corpo da requisão
   const { nome, email, telefone, endereco } = req.body;
   // obter identificação do cliente pelos parametros da rota
