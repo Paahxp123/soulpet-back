@@ -93,13 +93,10 @@ router.get("/pedidos/clientes/:id", async (req, res) => {
 
 // Adicionar um pedido
 
-router.post("/pedidos", pedidoSchema, async (req, res) => {
-    const {quantidade, clienteId, produtoId } = req.body;
+router.post("/pedidos", async (req, res) => {
+    const { pedidos } = req.body;
     try {
-        const novoPedido = await Pedidos.create(
-            { quantidade, clienteId, produtoId },
-            // { includes: [Cliente, Produto] }
-        );
+        const novoPedido = await Pedidos.bulkCreate(pedidos);
         res.status(201).json(novoPedido);
     } catch (err) {
         console.log(err);
@@ -109,7 +106,7 @@ router.post("/pedidos", pedidoSchema, async (req, res) => {
 
 // Atualizar os dados de um pedido
 
-router.put("/pedidos/:id", pedidoSchema, async (req, res) => {
+router.put("/pedidos/:id", async (req, res) => {
     const { pedidoId, quantidade } = req.body;
     const pedido = await Pedidos.findByPk(req.params.id);
 
