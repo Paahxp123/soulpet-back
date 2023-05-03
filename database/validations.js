@@ -43,14 +43,20 @@ const clienteSchema = celebrate({
 });
 
 const pedidoSchema = celebrate({
-  body: Joi.object().keys({
-    quantidade: Joi.number().integer().positive().required(),
-    clienteId: Joi.number().integer().positive().required(),
-    produtoId: Joi.number().integer().positive().required(),
-  })}, {
-    abortEarly: false,
-    messages: messages,
-  });
+  body: Joi.object({
+    pedidos: Joi.array().items(
+      Joi.object().keys({
+        quantidade: Joi.number().integer().positive().required(),
+        clienteId: Joi.number().integer().positive().required(),
+        produtoId: Joi.number().integer().positive().required(),
+      })
+    ).required()
+  })
+}, {
+  abortEarly: false,
+  messages: messages
+});
+
 
   const produtoSchema = celebrate({
     body: Joi.object().keys({

@@ -93,7 +93,7 @@ router.get("/pedidos/clientes/:id", async (req, res) => {
 
 // Adicionar um pedido
 
-router.post("/pedidos", async (req, res) => {
+router.post("/pedidos", pedidoSchema, async (req, res) => {
     const { pedidos } = req.body;
     try {
         const novoPedido = await Pedidos.bulkCreate(pedidos);
@@ -106,7 +106,7 @@ router.post("/pedidos", async (req, res) => {
 
 // Atualizar os dados de um pedido
 
-router.put("/pedidos/:id", async (req, res) => {
+router.put("/pedidos/:id", pedidoSchema, async (req, res) => {
     const { pedidoId, quantidade } = req.body;
     const pedido = await Pedidos.findByPk(req.params.id);
 

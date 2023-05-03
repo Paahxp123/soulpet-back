@@ -43,6 +43,10 @@ app.use(rotasDashboard);
 app.use(errors());
 
 
+// Adicione o middleware de tratamento de erros do Celebrate
+app.use(errors());
+
+
 app.listen(3001, async () => {
   try {
     // Gerar as tabelas a partir do model
