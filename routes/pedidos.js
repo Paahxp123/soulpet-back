@@ -6,7 +6,7 @@ const Pedidos = require("../database/pedido");
 const Produto = require("../database/produto");
 
 //Importações do schema de validação
-const {pedidoSchema} = require("../database/validations");
+const { pedidoSchema, editarPedidoSchema } = require("../database/validations");
 
 // Criar o grupo de rotas (/clientes)
 const router = Router();
@@ -106,24 +106,24 @@ router.post("/pedidos", pedidoSchema, async (req, res) => {
 
 // Atualizar os dados de um pedido
 
-router.put("/pedidos/:id", pedidoSchema, async (req, res) => {
-    const { pedidoId, quantidade } = req.body;
-    const pedido = await Pedidos.findByPk(req.params.id);
+router.put("/pedidos/:id", editarPedidoSchema, async (req, res) => {
+  const { pedidoId, quantidade } = req.body;
+  const pedido = await Pedidos.findByPk(req.params.id);
 
-    try {
-        if (pedido) {
-            const atualizarPedido = await Pedidos.update(
-                { pedidoId, quantidade },
-                { where: { pedidoId: req.params.id } }
-            );
-            res.status(201).json(atualizarPedido);
-        } else {
-            res.status(404).json({ message: "Pedido não encontrado" });
-        }
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ message: "Um erro aconteceu." });
+  try {
+    if (pedido) {
+      const atualizarPedido = await Pedidos.update(
+        { pedidoId, quantidade },
+        { where: { pedidoId: req.params.id } }
+      );
+      res.status(201).json(atualizarPedido);
+    } else {
+      res.status(404).json({ message: "Pedido não encontrado" });
     }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Um erro aconteceu." });
+  }
 });
 
 // Deletar um pedido por ID
