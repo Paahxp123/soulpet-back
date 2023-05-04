@@ -4,7 +4,7 @@ const Produto = require("../database/produto");
 const { Router } = require("express");
 
 //Importações do schema de validação
-const {produtoSchema} = require("../database/validations");
+const { produtoSchema } = require("../database/validations");
 
 //Definição da rota
 const router = Router();
@@ -43,6 +43,7 @@ router.delete("/produtos/:id", async (req, res) => {
 router.post("/produtos", produtoSchema, async (req, res) => {
     const { nome, preco, descricao, desconto, dataDesconto, categoria } = req.body;
     const dataAtual = new Date();
+    console.log(dataDesconto, dataAtual);
     const categorias = ["higiene", "Higiene", "limpeza", "Limpeza", "brinquedos", "Brinquedos", "marcas", "Marcas", "cachorro", "Cachorro", "gato", "Gato"];
     try {
         if (!categorias.includes(categoria)) {
@@ -95,7 +96,7 @@ router.get("/produtos/:id", async (req, res) => {
     }
 });
 //ATUALIZAR PRODUTOS 
-router.put('/produtos/:id', produtoSchema, async (req, res)=> {
+router.put('/produtos/:id', produtoSchema, async (req, res) => {
     const { id } = req.params;
     const { nome, preco, descricao, desconto, dataDesconto, categoria } = req.body;
 
