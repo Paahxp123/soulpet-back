@@ -3,7 +3,13 @@ const cors = require("cors");
 require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
-
+const agendamento = require("./database/agendamento");
+const cliente = require("./database/cliente");
+const endereco = require("./database/endereco");
+const Pedido = require("./database/pedido");
+const Pet = require("./database/pet");
+const Produto = require("./database/produto");
+const Servico = require("./database/servico");
 // importações do schema de validação
 const { errors } = require('celebrate');
 
@@ -53,9 +59,32 @@ app.listen(3001, async () => {
   try {
     // Gerar as tabelas a partir do model
     // Force = apaga tudo e recria as tabelas
-    await connection.sync();
-    console.log("Tabelas criadas com sucesso!");
+    const dbForce = process.env.DB_FORCE
+if (dbForce == "true") {
+  connection.sync({ force: true }).then(async () => {
 
+    const cliente1 = await cliente.create({ nome: 'João',email:"joao@gmail.com", telefone:"9912-198" });
+    const cliente2 = await cliente.create({ nome: 'Amanda',email:"amanda@gmail.com",telefone:"9777-000" });
+
+    // Cria três pets: dois pertencentes ao primeiro cliente e outro do segundo
+    const pet1 = await Pet.create({ nome: 'Thor', clienteId: cliente1.id, tipo:"cachorro",porte:"médio",dataNasc:'2022/05/05' });
+    const pet2 = await Pet.create({ nome: 'Mel', clienteId: cliente1.id, tipo:"gato",porte:"médio",dataNasc:'2023/04/04' });
+    const pet3 = await Pet.create({ nome: 'Bily', clienteId: cliente2.id, tipo:"cachorro",porte:"médio",dataNasc:'2023/05/01' });
+    const servico1 = await Servico.create({nome:'Banho e tosa', preco:100});
+    const servico2 = await Servico.create({nome:'Banho e tosa para cães e gatos', preco:100});
+    const agendamento1 = await agendamento.create({dataAgendada:'2023/07/07', realizada: 'true', petId:pet3.id,servicoId:servico1.id});
+    const agendamento2 = await agendamento.create({dataAgendada:'2023/08/08', realizada:'false',petId:pet2.id,servicoId:servico2.id});
+    const produto1 = await Produto.create({nome: 'produtotest',preco:20, descricao:'descriçãotest', desconto:0.1,dataDesconto:'2023/09/09',categoria:'higiene'});
+    const pedido1 = await Pedido.create({clienteId:cliente1.id, quantidade:1, produtoId:produto1.id});
+    const pedido2 = await Pedido.create({clienteId:cliente2.id, quantidade:3,produtoId:produto1.id });
+    const endereco1 = await endereco.create({uf:'SP',cidade:'São Paulo',cep:'0000000',rua:'ruatest',numero:'10',clienteId:cliente1.id});
+    
+  }).catch((err) => {
+    console.error('Erro ao sincronizar banco de dados', err)
+  })
+} else {
+  connection.sync()
+}
     console.log("Servidor rodando em http://localhost:3001/");
   } catch (error) {
     console.error("Erro ao criar as tabelas:", error);
